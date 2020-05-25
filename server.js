@@ -25,7 +25,7 @@ app.post("/api/notes", (req, res) => {
         if (err) {
             return console.log(err);
         }
-        console.log("Success!");
+        console.log("Note Added!");
     });
 });
 
@@ -43,7 +43,7 @@ app.delete("/api/notes/:id", (req, res) => {
         if (err) {
             return console.log(err);
         }
-        console.log("Deleted!");
+        console.log("Note Deleted!");
     });
 });
 
