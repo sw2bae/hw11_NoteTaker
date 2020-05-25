@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./db/db.json");
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // assets
@@ -14,12 +15,10 @@ app.use(express.static('public'));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "./public/index.html")));
 app.get("/notes", (req, res) => res.sendFile(path.join(__dirname, "./public/notes.html")));
 
-
-
-//API_POST
+//api/notes POST
 app.post("/api/notes", (req, res) => {
     const newNotes = req.body;
-    newNotes.id = db.length
+    newNotes.id = db.length;
     db.push(newNotes);
     res.json(db);
     fs.writeFile("./db/db.json", JSON.stringify(db), (err) => {
@@ -30,19 +29,23 @@ app.post("/api/notes", (req, res) => {
     });
 });
 
-// API_GET
+// api/notes_GET
 app.get("/api/notes", (req, res) => res.json(db));
-// console.log(db);
 
-// ID
-app.get("/api/notes/:id",(req,res)=> {
+//api/notes/id_DELETE
+app.delete("/api/notes/:id", (req, res) => {
     let id = req.params.id;
-    for (let i = 0; i < db.length; i++) {
-        if (id == db[i].id){
-            return res.json(db[i]);
+    let itemToFind = db.find((db)=>db.id==id);
+    let index = db.indexOf(itemToFind);
+    if (index > -1){db.splice(index, 1)};
+    res.json(db);
+    fs.writeFile("./db/db.json", JSON.stringify(db), (err) => {
+        if (err) {
+            return console.log(err);
         }
-    }
-    return res.json(false);
+        console.log("Deleted!");
+    });
 });
 
 app.listen(PORT, () => console.log("App listening on Port " + PORT));
+
