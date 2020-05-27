@@ -3,10 +3,11 @@ const db = require("../db/db.json");
 const express = require("express");
 const router = express.Router();
 
+
 //api/notes_POST
 router.post("/notes", (req, res) => {
     const newNotes = req.body;
-    newNotes.id = db.length;
+    newNotes.id = db.length+1;
     db.push(newNotes);
     res.json(db);
     fs.writeFile("./db/db.json", JSON.stringify(db), (err) => {
