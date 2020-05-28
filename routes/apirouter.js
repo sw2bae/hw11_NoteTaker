@@ -2,12 +2,14 @@ const fs = require("fs");
 const db = require("../db/db.json");
 const express = require("express");
 const router = express.Router();
-
+// dummy.json file for creating an uniq ID 
+const dummy = require("../db/dummy.json");
 
 //api/notes_POST
 router.post("/notes", (req, res) => {
     const newNotes = req.body;
-    newNotes.id = db.length+1;
+    newNotes.id = dummy.length+1;
+    dummy.push(newNotes);
     db.push(newNotes);
     res.json(db);
     fs.writeFile("./db/db.json", JSON.stringify(db), (err) => {
@@ -15,6 +17,11 @@ router.post("/notes", (req, res) => {
             return console.log(err);
         }
         console.log("Note Added!");
+    });
+    fs.writeFile("./db/dummy.json", JSON.stringify(dummy), (err) => {
+        if (err) {
+            return console.log(err);
+        }
     });
 });
 // api/notes_GET
